@@ -1,184 +1,141 @@
+console.log('Running');
+
+// Example of a VERY simple Monopoly game simulation
+
+// Each square represents the cash earned when a player is on it. For example:
+// - If a user is at position 0, the cash will increase by 100€
+// - If a user is at position 4, the cash will decrease by 40€
+
 const squares = [100, -10, 0, 0, -40, -10, -10, 5, 0, -10, -50, -10, 0, 0, -50, -10];
-class Player {
-    constructor(name, color) {
-        this.name = name;
-        this.color = color;
-        this.position = 0;
-        this.cash = 1000;
-    }
 
-    move() {
-        let dice = 1 + Math.floor(Math.random() * 6);
-        this.position = (this.position + dice) % squares.length
-        this.cash += squares[this.position];
-        if (this.cash <= 0) {
-            console.log(`Game over for player ${this.name}`);
-        }
-    }
-}
-/*
-const pauline = new Player('Timmy');
-pauline.nama = 'Pauline';
-pauline.move();
-console.log(pauline);
-*/
+// --- Initialization ---
 
-
-
-
-
-// players
-/*
 let player1 = {
-    name: 'Pauline',
+    name: 'Joaquim',
     color: 'red',
     position: 0,
-    cash: 1000,
-    move: function () {
-        let dice = 1 + Math.floor(Math.random() * 6);
-        this.position = (this.position + dice) % squares.length
-        this.cash += squares[this.position];
-        if (this.cash <= 0) {
-            console.log(`Game over for player ${this.name}`);
-        }
-    },
-    display: function () {
-        console.log(`${this.name} is at position ${this.position} and has ${this.cash} amount of cash`);
-    }
+    cash: 1000
 }
-*/
-// player1.move();
-// player1.display();
-
-
-
-
-
-
-
-
 
 let player2 = {
-    name: 'Jeff',
+    name: 'Maxence',
     color: 'blue',
     position: 0,
     cash: 1000
 }
 
 let player3 = {
-    name: 'Timmy',
+    name: 'Mostafa',
     color: 'black',
     position: 0,
     cash: 1000
 }
 
-// let dice;
-// console.log(Math.random());
-// dice = 1 + Math.floor(Math.random() * 6);
+let dice;
 
-// player1.position = player1.position + dice;
-// if (player1.position + dice > 15) {
+
+
+// --- Turn of Player 1 ---
+// The dice is a random integer between 1 and 6
+dice = 1 + Math.floor(6 * Math.random());
+// The position is always between 0 and 15 (the numbers of squares - 1);
+// we can do this: 
+// if ((player1.position + dice) > 15) {
 //     player1.position = player1.position + dice - squares.length;
 // } else {
 //     player1.position += dice
 // }
-
-// moving the player
-// player1.position = (player1.position + dice) % squares.length
-
-// update the cash
-// player1.cash += squares[player1.position];
-
-// check if game is over
-// if (player1.cash <= 0) {
-//     console.log(`Game over for player ${player1.name}`);
-// }
-
-/*
-class Cat {
-    constructor(name, color, sound, lives) {
-        this.name = name;
-        this.color = color;
-        this.sound = sound;
-        this.lives = lives;
-    }
-    makeSound() {
-        return this.sound;
-    }
-
-}
-
-class Bird {
-    constructor(name, color, sound) {
-        this.name = name;
-        this.color = color;
-        this.sound = sound;
-    }
-    makeSound() {
-        console.log(sound);
-    }
-    fly() {
-        console.log('i am flying');
-    }
-}
-*/
-class Animal {
-    constructor(name, color, sound) {
-        this.name = name;
-        this.color = color;
-        this.sound = sound;
-    }
-    makeSound() {
-        console.log(this.sound + '!!!!');
-    }
-    move() {
-        console.log('i am moving');
-    }
+// 
+// or simpler
+player1.position = (player1.position + dice) % squares.length;
+// The cash is updated based on the values of squares and player1.position
+player1.cash += squares[player1.position];
+// If the player doesn't have anymore cash, player is out of game
+if (player1.cash < 0) {
+    console.log(`Game over for ${player1.name}.`);
 }
 
 
-class Cat extends Animal {
-    constructor(name, color, sound, lives) {
-        super(name, color, sound);
-        this.lives = lives;
+
+// now make the other moves and display the info:
+
+
+// --- Turn of Player 2 --- 
+dice = 1 + Math.floor(6 * Math.random());
+player2.position = (player2.position + dice) % squares.length;
+player2.cash += squares[player2.position];
+if (player2.cash < 0) {
+    console.log(`Game over for ${player2.name}.`);
+}
+
+// --- Turn of Player 3 --- 
+dice = 1 + Math.floor(6 * Math.random());
+player3.position = (player3.position + dice) % squares.length;
+player3.cash += squares[player3.position];
+if (player3.cash < 0) {
+    console.log(`Game over for ${player3.name}.`);
+}
+
+// --- Display info  ---
+console.log(player1);
+console.log(player2);
+console.log(player3);
+
+
+// there is a lot of repetition
+// it would be nice if we had a method on the player object to do player.move()
+
+move: function() {
+    let dice = 1 + Math.floor(6 * Math.random());
+    // now we need a way to reference field from this object
+    this.position = (this.position + dice) % squares.length;
+    this.cash += squares[this.position];
+    if (this.cash < 0) {
+        console.log(`Game over for ${this.name}.`);
     }
-    makeSound() {
-        console.log('sound from cat');
+},
+displayInfo: function() {
+    console.log(`${this.name} is at position ${this.position} and has ${this.cash}€`);
+}
+
+
+// then the player object looks like this: 
+
+let player1 = {
+    name: 'Joaquim',
+    color: 'red',
+    position: 0,
+    cash: 1000,
+    move: function () {
+        let dice = 1 + Math.floor(6 * Math.random());
+        this.position = (this.position + dice) % squares.length;
+        this.cash += squares[this.position];
+        if (this.cash < 0) {
+            console.log(`Game over for ${this.name}.`);
+        }
+    },
+    displayInfo: function () {
+        console.log(`${this.name} is at position ${this.position} and has ${this.cash}€`);
     }
 }
 
-const kitty = new Cat('kitty', 'black', 'meow', 7);
-console.log(kitty.move());
+// And then to make the players move and display their info we can do:
 
+// --- Turn 1  ---
+player1.move();
+player2.move();
+player3.move();
 
+// --- Turn 2  ---
+player1.move();
+player2.move();
+player3.move();
 
-class Bird extends Animal {
-    constructor(name, color, sound) {
-        super(name, color, sound)
-        this.age = 3;
-    }
-    makeSound() {
-        console.log(sound);
-    }
-    fly() {
-        console.log('i am flying');
-    }
-}
+// --- Display info  ---
+player1.displayInfo();
+player2.displayInfo();
+player3.displayInfo();
 
-const pety = new Bird('pety', 'yellow', 'peep');
-console.log(pety)
+// an exercise with this :
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// https://repl.it/@janRedmann/chuck-norris-oop
